@@ -39,7 +39,7 @@ public class Dao {
 
 	public void createTables() {
 		// variables for SQL Query table creations
-		final String createTicketsTable = "CREATE TABLE tboyne_tickets(ticket_id INT AUTO_INCREMENT PRIMARY KEY, ticket_issuer VARCHAR(30), gender VARCHAR(30), ticket_description VARCHAR(200), priority VARCHAR(30) )";
+		final String createTicketsTable = "CREATE TABLE tboyne_tickets(ticket_id INT AUTO_INCREMENT PRIMARY KEY, ticket_issuer VARCHAR(30), gender VARCHAR(30), ticket_description VARCHAR(200), ticket_priority VARCHAR(30))";
 		final String createUsersTable = "CREATE TABLE tboyne_users(uid INT AUTO_INCREMENT PRIMARY KEY, uname VARCHAR(30), upass VARCHAR(30), admin int)";
 
 		try {
@@ -113,7 +113,8 @@ public class Dao {
 		int id = 0;
 		try {
 			statement = getConnection().createStatement();
-			statement.executeUpdate("Insert into tboyne_tickets" + "(ticket_issuer, gender, ticket_description, priority) values('" + ticketName + "','" + ticketerGender + "','" + ticketDesc + ticketPriority + "')", Statement.RETURN_GENERATED_KEYS);
+			statement.executeUpdate("Insert into tboyne_tickets" + "(ticket_issuer, gender, ticket_description, ticket_priority,) values(" + " '"
+					+ ticketName + "','" + ticketerGender + "','" + ticketDesc + ticketPriority + "')", Statement.RETURN_GENERATED_KEYS);
 
 			// retrieve ticket id number newly auto generated upon record insertion
 			ResultSet resultSet = null;
