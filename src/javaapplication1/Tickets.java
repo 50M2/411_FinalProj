@@ -121,11 +121,12 @@ public class Tickets extends JFrame implements ActionListener {
 
 			// get ticket information
 			String ticketName = JOptionPane.showInputDialog(null, "Enter your name");
+      String ticketerGender = JOptionPane.showInputDialog(null, "Enter your gender");
 			String ticketDesc = JOptionPane.showInputDialog(null, "Enter a ticket description");
 
 			// insert ticket information to database
 
-			int id = dao.insertRecords(ticketName, ticketDesc);
+			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc);
 
 			// display results if successful or not to console / dialog box
 			if (id != 0) {
