@@ -124,11 +124,11 @@ public class Tickets extends JFrame implements ActionListener {
       String ticketerGender = JOptionPane.showInputDialog(null, "Enter your gender");
 			String ticketDesc = JOptionPane.showInputDialog(null, "Enter a ticket description");
       String[] priorityOptions = {"Low", "Medium", "High"};
-      String prio = JOptionPane.showInputDialog(null, "Enter percieved ticket priority", priorityOptions[0]);
+      String ticketPriority = JOptionPane.showInputDialog(null, "Enter percieved ticket priority (Low, Medium, Or High)", priorityOptions[0]);
 
 			// insert ticket information to database
 
-			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc, prio);
+			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc, ticketPriority);
 
 			// display results if successful or not to console / dialog box
 			if (id != 0) {
