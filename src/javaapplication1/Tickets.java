@@ -32,6 +32,7 @@ public class Tickets extends JFrame implements ActionListener {
 	// Sub menu item objects for all Main menu item objects
 	JMenuItem mnuItemExit;
 	JMenuItem mnuItemUpdate;
+  JMenuItem mnuItemUpdatePrio;
 	JMenuItem mnuItemDelete;
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewTicket;
@@ -65,6 +66,11 @@ public class Tickets extends JFrame implements ActionListener {
 		// add to Admin main menu item
 		mnuAdmin.add(mnuItemDelete);
 
+    // initialize third sub menu items for Admin main menu
+    mnuItemUpdatePrio = new JMenuItem("Update Ticket Priority");
+    // add to Admin main menu item
+    mnuAdmin.add(mnuItemUpdatePrio);
+
 		// initialize first sub menu item for Tickets main menu
 		mnuItemOpenTicket = new JMenuItem("Open Ticket");
 		// add to Ticket Main menu item
@@ -82,6 +88,7 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemExit.addActionListener(this);
 		mnuItemUpdate.addActionListener(this);
 		mnuItemDelete.addActionListener(this);
+    mnuItemUpdatePrio.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
 		mnuItemViewTicket.addActionListener(this);
     
@@ -123,7 +130,9 @@ public class Tickets extends JFrame implements ActionListener {
 		// implement actions for sub menu items
 		if (e.getSource() == mnuItemExit) {
 			System.exit(0);
-		} else if (e.getSource() == mnuItemOpenTicket) {
+    } 
+
+    else if (e.getSource() == mnuItemOpenTicket) {
 
 			// get ticket information
 			String ticketName = JOptionPane.showInputDialog(null, "Enter your name");
@@ -167,11 +176,43 @@ public class Tickets extends JFrame implements ActionListener {
       String newDesc = JOptionPane.showInputDialog(null, "Enter new Ticket Description:");
       
       if (ticketID != null && newDesc != null) {
-        try {
-          dao.updateRecords(Integer.parseInt(ticketID), newDesc);
-          JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " updated successfully.");
-        } catch (NumberFormatException nfe) {
-          JOptionPane.showMessageDialog(null, "Invalid Ticket ID.");
+
+        if (chkIfAdmin) {
+          try {
+            dao.updateRecords(Integer.parseInt(ticketID), newDesc, chkIfAdmin);
+            JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " updated successfully.");
+          }
+          
+          catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Invalid Ticket ID.");
+          }
+        }
+
+        else {
+          JOptionPane.showMessageDialog(null, "You dont have permission to update tickets.");
+        }
+      }
+    }
+
+    else if (e.getSource() == mnuItemUpdatePrio) {
+      String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to update:");
+      String newPrio = JOptionPane.showInputDialog(null, "Enter Ticket Priority:");
+      
+      if (ticketID != null && newPrio != null) {
+
+        if (chkIfAdmin) {
+          try {
+            dao.updatePriority(Integer.parseInt(ticketID), newPrio, chkIfAdmin);
+            JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " updated successfully.");
+          }
+          
+          catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Invalid Ticket ID.");
+          }
+        }
+
+        else {
+          JOptionPane.showMessageDialog(null, "You dont have permission to update ticket Priority.");
         }
       }
     }

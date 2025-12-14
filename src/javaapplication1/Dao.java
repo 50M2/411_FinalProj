@@ -8,9 +8,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 public class Dao {
 	// instance fields
@@ -141,7 +144,9 @@ public class Dao {
       if(isAdmin) {
         statement = connect.createStatement();
         results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2");
-      } else {
+      } 
+
+      else {
         statement = connect.createStatement();
         results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2 WHERE ticket_issuer = '" + username + "'");
       }
@@ -155,23 +160,36 @@ public class Dao {
 	}
 
   //updateRecords method to update ticket description
-  public void updateRecords(int ticketID, String newDesc) {
+  public void updateRecords(int ticketID, String newDesc, boolean isAdmin) {
+
+    String sqlForPstmtDesc = "UPDATE tboyne_ticketsV2 SET ticket_description = ? WHERE ticket_id = ?";
+
     try {
-      statement = getConnection().createStatement();
-      statement.executeUpdate("UPDATE tboyne_ticketsV2 SET ticket_description = '" + newDesc + "' WHERE ticket_id = " + ticketID);
-    } 
+      Connection conn = getConnection();
+      PreparedStatement pstmt = conn.prepareStatement(sqlForPstmtDesc);
+      pstmt.setString(1, newDesc);
+      pstmt.setInt(2, ticketID);
+      pstmt.executeUpdate();
+    }
+
     catch (SQLException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
-
+  
   //updatePriority method to update ticket description
-  public void updatePriority(int ticketID, String newPrio) {
+  public void updatePriority(int ticketID, String newPrio, boolean isAdmin) {
+
+    String sqlForPstmtPrio = "UPDATE tboyne_ticketsV2 SET ticket_priority = ? WHERE ticket_id = ?";
+    
     try {
-      statement = getConnection().createStatement();
-      statement.executeUpdate("UPDATE tboyne_ticketsV2 SET ticket_priority = '" + newPrio + "' WHERE ticket_id = " + ticketID);
-    } 
+      Connection conn = getConnection();
+      PreparedStatement pstmt = conn.prepareStatement(sqlForPstmtPrio);
+      pstmt.setString(1, newPrio);
+      pstmt.setInt(2, ticketID);
+      pstmt.executeUpdate();
+    }
     catch (SQLException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
