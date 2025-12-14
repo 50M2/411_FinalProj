@@ -63,7 +63,7 @@ public class Login extends JFrame {
 				boolean admin = false;
         String username = txtUname.getText();
 				count = count + 1;
-				// verify credentials of user (MAKE SURE TO CHANGE TO YOUR TABLE NAME BELOW)
+				// verify credentials of user 
 
 				String query = "SELECT * FROM tboyne_usersV3 WHERE uname = ? and upass = ?;";
 				try (PreparedStatement stmt = conn.getConnection().prepareStatement(query)) {

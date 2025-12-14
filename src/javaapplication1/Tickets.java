@@ -49,6 +49,7 @@ public class Tickets extends JFrame implements ActionListener {
 
 	}
 
+  //create menu
 	private void createMenu() {
 
 		/* Initialize sub menu items **************************************/
@@ -88,9 +89,6 @@ public class Tickets extends JFrame implements ActionListener {
 		// add to Ticket Main menu item
 		mnuTickets.add(mnuItemViewTicket);
 
-
-		// initialize any more desired sub menu items below
-
 		/* Add action listeners for each desired menu item *************/
 		mnuItemExit.addActionListener(this);
 		mnuItemUpdate.addActionListener(this);
@@ -99,17 +97,9 @@ public class Tickets extends JFrame implements ActionListener {
     mnuItemUpdatePrio.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
 		mnuItemViewTicket.addActionListener(this);
-    
-
-		 /*
-		  * continue implementing any other desired sub menu items (like 
-		  * for update and delete sub menus for example) with similar 
-		  * syntax & logic as shown above
-		 */
-
- 
 	}
 
+  //create GUI
 	private void prepareGUI() {
 
 		// create JMenu bar
@@ -151,7 +141,6 @@ public class Tickets extends JFrame implements ActionListener {
       String ticketStartDate = java.time.LocalDate.now().toString();
 
 			// insert ticket information to database
-
 			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc, ticketPriority, ticketStartDate);
 
 			// display results if successful or not to console / dialog box
@@ -167,8 +156,7 @@ public class Tickets extends JFrame implements ActionListener {
 			// retrieve all tickets details for viewing in JTable
 			try {
 
-				// Use JTable built in functionality to build a table model and
-				// display the table model off your result set!!!
+				//create JTable and read records
 				JTable jt = new JTable(ticketsJTable.buildTableModel(dao.readRecords(chkIfAdmin, currentUser)));
 				jt.setBounds(30, 40, 200, 400);
 				JScrollPane sp = new JScrollPane(jt);
@@ -180,6 +168,7 @@ public class Tickets extends JFrame implements ActionListener {
 			}
 		}
 
+    //update ticket description(Admin only)
     else if (e.getSource() == mnuItemUpdate) {
       String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to update:");
       String newDesc = JOptionPane.showInputDialog(null, "Enter new Ticket Description:");
@@ -203,6 +192,7 @@ public class Tickets extends JFrame implements ActionListener {
       }
     }
 
+    //update ticket priority(Admin only)
     else if (e.getSource() == mnuItemUpdatePrio) {
       String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to update:");
       String newPrio = JOptionPane.showInputDialog(null, "Enter Ticket Priority:");
@@ -226,6 +216,7 @@ public class Tickets extends JFrame implements ActionListener {
       }
     }
 
+    //delete ticket(Admin only)
     else if (e.getSource() == mnuItemDelete) {
       String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to delete:");
 
@@ -233,8 +224,14 @@ public class Tickets extends JFrame implements ActionListener {
 
         if (chkIfAdmin) {
           try {
-            dao.deleteRecords(Integer.parseInt(ticketID), chkIfAdmin);
-            JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " deleted successfully.");
+            int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete Ticket ID: " + ticketID + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+            if (confirmation != JOptionPane.YES_OPTION) {
+              return; 
+            }
+            else {
+              dao.deleteRecords(Integer.parseInt(ticketID), chkIfAdmin);
+              JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " deleted successfully.");
+            }
           }
 
           catch (NumberFormatException nfe) {
@@ -248,6 +245,7 @@ public class Tickets extends JFrame implements ActionListener {
       }
     }
 
+    //close ticket(Admin only)
     else if (e.getSource() == mnuItemClose) {
       String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to close");
       String ticketEndDate = java.time.LocalDate.now().toString();

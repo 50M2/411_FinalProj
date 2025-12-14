@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 public class Dao {
 	// instance fields
 	static Connection connect = null;
@@ -39,7 +37,6 @@ public class Dao {
 	}
 
 	// CRUD implementation
-
 	public void createTables() {
 		// variables for SQL Query table creations
 		final String createTicketsTable = "CREATE TABLE tboyne_ticketsV3(ticket_id INT AUTO_INCREMENT PRIMARY KEY, ticket_issuer VARCHAR(30), gender VARCHAR(30), ticket_description VARCHAR(200), ticket_priority VARCHAR(10), ticket_status VARCHAR(10) DEFAULT 'OPEN', ticket_start_date VARCHAR(30), ticket_end_date VARCHAR(30) DEFAULT 'N/A')";
@@ -48,7 +45,6 @@ public class Dao {
 		try {
 
 			// execute queries to create tables
-
 			statement = getConnection().createStatement();
 
 			statement.executeUpdate(createTicketsTable);
@@ -66,8 +62,8 @@ public class Dao {
 		addUsers();
 	}
 
+  // addUsers method to read userlist.csv and insert users into user table
 	public void addUsers() {
-		// add list of users from userlist.csv file to users table
 
 		// variables for SQL Query inserts
 		String sql;
@@ -91,11 +87,9 @@ public class Dao {
 		try {
 
 			// Setup the connection with the DB
-
 			statement = getConnection().createStatement();
 
-			// create loop to grab each array index containing a list of values
-			// and PASS (insert) that data into your User table
+			// insert data into table
 			for (List<String> rowData : array) {
 
 				sql = "insert into tboyne_usersV3(uname,upass,admin) " + "values('" + rowData.get(0) + "'," + " '"
@@ -112,6 +106,7 @@ public class Dao {
 		}
 	}
 
+  //insertRecords method to create ticket
 	public int insertRecords(String ticketName, String ticketerGender, String ticketDesc, String ticketPriority, String ticketStartDate) {
 		int id = 0;
 		try {
@@ -228,9 +223,4 @@ public class Dao {
       e.printStackTrace();
     }
   }
-
-
-
-
-	// continue coding for deleteRecords implementation
 }
