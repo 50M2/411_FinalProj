@@ -212,20 +212,31 @@ public class Tickets extends JFrame implements ActionListener {
         }
 
         else {
-          JOptionPane.showMessageDialog(null, "You dont have permission to update ticket Priority.");
+          JOptionPane.showMessageDialog(null, "You dont have permission to update ticket priority.");
         }
       }
     }
 
-    
-      
+    else if (e.getSource() == mnuItemDelete) {
+      String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to delete:");
 
+      if (ticketID !=null) {
 
-		/*
-		 * continue implementing any other desired sub menu items (like for update and
-		 * delete sub menus for example) with similar syntax & logic as shown above
-		 */
+        if (chkIfAdmin) {
+          try {
+            dao.deleteRecords(Integer.parseInt(ticketID), chkIfAdmin);
+            JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " deleted successfully.");
+          }
 
+          catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Invalid Ticket ID.");
+          }
+        }
+
+        else {
+          JOptionPane.showMessageDialog(null, "You dont have permission to delete tickets.");
+        }
+      }
+    }
 	}
-
 }

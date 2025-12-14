@@ -196,6 +196,22 @@ public class Dao {
     }
   }
 
+  //deleteRecords method to delete ticket
+  public void deleteRecords (int ticketID, boolean isAdmin) {
+    String sqlForPstmtDel = "DELETE FROM tboyne_ticketsV2 WHERE ticket_id = ?";
+    try {
+      Connection conn = getConnection();
+      PreparedStatement pstmt = conn.prepareStatement(sqlForPstmtDel);
+      pstmt.setInt(1, ticketID);
+      pstmt.executeUpdate();
+
+    }
+    catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
 
 
 
