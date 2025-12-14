@@ -34,8 +34,10 @@ public class Tickets extends JFrame implements ActionListener {
 	JMenuItem mnuItemUpdate;
   JMenuItem mnuItemUpdatePrio;
 	JMenuItem mnuItemDelete;
+  JMenuItem mnuItemClose;
 	JMenuItem mnuItemOpenTicket;
 	JMenuItem mnuItemViewTicket;
+
   
 
 	public Tickets(Boolean isAdmin, String username) {
@@ -71,6 +73,11 @@ public class Tickets extends JFrame implements ActionListener {
     // add to Admin main menu item
     mnuAdmin.add(mnuItemUpdatePrio);
 
+    // initialize fourth sub menu items for Admin main menu
+    mnuItemClose = new JMenuItem("Close Ticket");
+    // add to Admin main menu item
+    mnuAdmin.add(mnuItemClose);
+
 		// initialize first sub menu item for Tickets main menu
 		mnuItemOpenTicket = new JMenuItem("Open Ticket");
 		// add to Ticket Main menu item
@@ -88,6 +95,7 @@ public class Tickets extends JFrame implements ActionListener {
 		mnuItemExit.addActionListener(this);
 		mnuItemUpdate.addActionListener(this);
 		mnuItemDelete.addActionListener(this);
+    mnuItemClose.addActionListener(this);
     mnuItemUpdatePrio.addActionListener(this);
 		mnuItemOpenTicket.addActionListener(this);
 		mnuItemViewTicket.addActionListener(this);
@@ -140,10 +148,11 @@ public class Tickets extends JFrame implements ActionListener {
 			String ticketDesc = JOptionPane.showInputDialog(null, "Enter a ticket description");
       String[] priorityOptions = {"Low", "Medium", "High"};
       String ticketPriority = JOptionPane.showInputDialog(null, "Enter percieved ticket priority (Low, Medium, Or High)", priorityOptions[0]);
+      String ticketStartDate = java.time.LocalDate.now().toString();
 
 			// insert ticket information to database
 
-			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc, ticketPriority);
+			int id = dao.insertRecords(ticketName, ticketerGender, ticketDesc, ticketPriority, ticketStartDate);
 
 			// display results if successful or not to console / dialog box
 			if (id != 0) {
@@ -235,6 +244,28 @@ public class Tickets extends JFrame implements ActionListener {
 
         else {
           JOptionPane.showMessageDialog(null, "You dont have permission to delete tickets.");
+        }
+      }
+    }
+
+    else if (e.getSource() == mnuItemClose) {
+      String ticketID = JOptionPane.showInputDialog(null, "Enter Ticket ID to close");
+      String ticketEndDate = java.time.LocalDate.now().toString();
+
+      if (ticketID !=null) {
+
+        if (chkIfAdmin) {
+          try {
+            dao.closeRecords(Integer.parseInt(ticketID), ticketEndDate, chkIfAdmin);
+            JOptionPane.showMessageDialog(null, "Ticket ID: " + ticketID + " closed successfully.");
+          }
+
+          catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(null, "Invalid Ticket ID.");
+          }
+        }
+        else {
+          JOptionPane.showMessageDialog(null, "You dont have permission to close tickets.");
         }
       }
     }

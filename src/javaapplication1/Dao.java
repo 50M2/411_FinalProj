@@ -42,8 +42,8 @@ public class Dao {
 
 	public void createTables() {
 		// variables for SQL Query table creations
-		final String createTicketsTable = "CREATE TABLE tboyne_ticketsV2(ticket_id INT AUTO_INCREMENT PRIMARY KEY, ticket_issuer VARCHAR(30), gender VARCHAR(30), ticket_description VARCHAR(200), ticket_priority VARCHAR(10) )";
-		final String createUsersTable = "CREATE TABLE tboyne_users(uid INT AUTO_INCREMENT PRIMARY KEY, uname VARCHAR(30), upass VARCHAR(30), admin int)";
+		final String createTicketsTable = "CREATE TABLE tboyne_ticketsV3(ticket_id INT AUTO_INCREMENT PRIMARY KEY, ticket_issuer VARCHAR(30), gender VARCHAR(30), ticket_description VARCHAR(200), ticket_priority VARCHAR(10), ticket_status VARCHAR(10) DEFAULT 'OPEN', ticket_start_date VARCHAR(30), ticket_end_date VARCHAR(30) DEFAULT 'N/A')";
+		final String createUsersTable = "CREATE TABLE tboyne_usersV3(uid INT AUTO_INCREMENT PRIMARY KEY, uname VARCHAR(30), upass VARCHAR(30), admin int)";
 
 		try {
 
@@ -98,7 +98,7 @@ public class Dao {
 			// and PASS (insert) that data into your User table
 			for (List<String> rowData : array) {
 
-				sql = "insert into tboyne_users(uname,upass,admin) " + "values('" + rowData.get(0) + "'," + " '"
+				sql = "insert into tboyne_usersV3(uname,upass,admin) " + "values('" + rowData.get(0) + "'," + " '"
 						+ rowData.get(1) + "','" + rowData.get(2) + "');";
 				statement.executeUpdate(sql);
 			}
@@ -112,12 +112,12 @@ public class Dao {
 		}
 	}
 
-	public int insertRecords(String ticketName, String ticketerGender, String ticketDesc, String ticketPriority) {
+	public int insertRecords(String ticketName, String ticketerGender, String ticketDesc, String ticketPriority, String ticketStartDate) {
 		int id = 0;
 		try {
 			statement = getConnection().createStatement();
-			statement.executeUpdate("Insert into tboyne_ticketsV2" + "(ticket_issuer, gender, ticket_description, ticket_priority) values(" + " '"
-					+ ticketName + "','" + ticketerGender + "','" + ticketDesc + "','" + ticketPriority + "')", Statement.RETURN_GENERATED_KEYS);
+			statement.executeUpdate("Insert into tboyne_ticketsV3" + "(ticket_issuer, gender, ticket_description, ticket_priority, ticket_start_date) values(" + " '"
+					+ ticketName + "','" + ticketerGender + "','" + ticketDesc + "','" + ticketPriority + "','" + ticketStartDate + "')", Statement.RETURN_GENERATED_KEYS);
 
 			// retrieve ticket id number newly auto generated upon record insertion
 			ResultSet resultSet = null;
@@ -143,12 +143,12 @@ public class Dao {
 
       if(isAdmin) {
         statement = connect.createStatement();
-        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2");
+        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV3");
       } 
 
       else {
         statement = connect.createStatement();
-        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2 WHERE ticket_issuer = '" + username + "'");
+        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV3 WHERE ticket_issuer = '" + username + "'");
       }
 			
 		} 
@@ -162,7 +162,7 @@ public class Dao {
   //updateRecords method to update ticket description
   public void updateRecords(int ticketID, String newDesc, boolean isAdmin) {
 
-    String sqlForPstmtDesc = "UPDATE tboyne_ticketsV2 SET ticket_description = ? WHERE ticket_id = ?";
+    String sqlForPstmtDesc = "UPDATE tboyne_ticketsV3 SET ticket_description = ? WHERE ticket_id = ?";
 
     try {
       Connection conn = getConnection();
@@ -181,7 +181,7 @@ public class Dao {
   //updatePriority method to update ticket description
   public void updatePriority(int ticketID, String newPrio, boolean isAdmin) {
 
-    String sqlForPstmtPrio = "UPDATE tboyne_ticketsV2 SET ticket_priority = ? WHERE ticket_id = ?";
+    String sqlForPstmtPrio = "UPDATE tboyne_ticketsV3 SET ticket_priority = ? WHERE ticket_id = ?";
     
     try {
       Connection conn = getConnection();
@@ -198,13 +198,30 @@ public class Dao {
 
   //deleteRecords method to delete ticket
   public void deleteRecords (int ticketID, boolean isAdmin) {
-    String sqlForPstmtDel = "DELETE FROM tboyne_ticketsV2 WHERE ticket_id = ?";
+    String sqlForPstmtDel = "DELETE FROM tboyne_ticketsV3 WHERE ticket_id = ?";
     try {
       Connection conn = getConnection();
       PreparedStatement pstmt = conn.prepareStatement(sqlForPstmtDel);
       pstmt.setInt(1, ticketID);
       pstmt.executeUpdate();
 
+    }
+    catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  //closeRecords method to close ticket
+  public void closeRecords(int ticketID, String ticketEndDate, boolean isAdmin) {
+    String sqlForPstmtClose = "UPDATE tboyne_ticketsV3 SET ticket_status = 'CLOSED', ticket_end_date = ? WHERE ticket_id = ?";
+    
+    try {
+      Connection conn = getConnection();
+      PreparedStatement pstmt = conn.prepareStatement(sqlForPstmtClose);
+      pstmt.setString(1, ticketEndDate);
+      pstmt.setInt(2, ticketID);
+      pstmt.executeUpdate();
     }
     catch (SQLException e) {
       // TODO Auto-generated catch block
