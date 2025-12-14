@@ -61,6 +61,7 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				boolean admin = false;
+        String username = txtUname.getText();
 				count = count + 1;
 				// verify credentials of user (MAKE SURE TO CHANGE TO YOUR TABLE NAME BELOW)
 
@@ -71,7 +72,7 @@ public class Login extends JFrame {
 					ResultSet rs = stmt.executeQuery();
 					if (rs.next()) {
 						admin = rs.getBoolean("admin"); // get table column value
-						new Tickets(admin); //open Tickets file / GUI interface
+						new Tickets(admin, username ); //open Tickets file / GUI interface
 						setVisible(false); // HIDE THE FRAME
 						dispose(); // CLOSE OUT THE WINDOW
 					} else
