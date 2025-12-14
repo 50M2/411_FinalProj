@@ -131,20 +131,50 @@ public class Dao {
 		return id;
 
 	}
-
-	public ResultSet readRecords() {
+  
+  //readRecords method to view tickets
+	public ResultSet readRecords(boolean isAdmin, String username) {
 
 		ResultSet results = null;
 		try {
-			statement = connect.createStatement();
-			results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2");
-			//connect.close();
-		} catch (SQLException e1) {
+
+      if(isAdmin) {
+        statement = connect.createStatement();
+        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2");
+      } else {
+        statement = connect.createStatement();
+        results = statement.executeQuery("SELECT * FROM tboyne_ticketsV2 WHERE ticket_issuer = '" + username + "'");
+      }
+			
+		} 
+    
+    catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		return results;
 	}
-	// continue coding for updateRecords implementation
+
+  //updateRecords method to update ticket description
+  public void updateRecords(int ticketID, String newDesc) {
+    try {
+      statement = getConnection().createStatement();
+      statement.executeUpdate("UPDATE tboyne_ticketsV2 SET ticket_description = '" + newDesc + "' WHERE ticket_id = " + ticketID);
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  //updatePriority method to update ticket description
+  public void updatePriority(int ticketID, String newPrio) {
+    try {
+      statement = getConnection().createStatement();
+    
+    }
+  }
+
+
+
 
 	// continue coding for deleteRecords implementation
 }
