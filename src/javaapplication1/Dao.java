@@ -159,7 +159,8 @@ public class Dao {
     try {
       statement = getConnection().createStatement();
       statement.executeUpdate("UPDATE tboyne_ticketsV2 SET ticket_description = '" + newDesc + "' WHERE ticket_id = " + ticketID);
-    } catch (SQLException e) {
+    } 
+    catch (SQLException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
@@ -169,7 +170,11 @@ public class Dao {
   public void updatePriority(int ticketID, String newPrio) {
     try {
       statement = getConnection().createStatement();
-    
+      statement.executeUpdate("UPDATE tboyne_ticketsV2 SET ticket_priority = '" + newPrio + "' WHERE ticket_id = " + ticketID);
+    } 
+    catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
